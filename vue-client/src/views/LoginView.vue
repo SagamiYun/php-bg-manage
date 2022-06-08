@@ -13,14 +13,17 @@
             </el-form-item>
             <el-form-item>
               <div style="display: flex">
-                <el-input prefix-icon="el-icon-key" v-model="form.validCode" style="width: 50%;" placeholder="请输入验证码"></el-input>
-                <ValidCode @input="createValidCode" />
+                <el-input prefix-icon="el-icon-key" v-model="form.validCode" style="width: 50%;"
+                          placeholder="请输入验证码"></el-input>
+                <ValidCode @input="createValidCode"/>
               </div>
             </el-form-item>
             <el-form-item>
               <el-button style="width: 100%" type="primary" @click="login">登 录</el-button>
             </el-form-item>
-            <el-form-item><el-button type="text" @click="$router.push('/register')">前往注册 >> </el-button></el-form-item>
+            <el-form-item>
+              <el-button type="text" @click="$router.push('/register')">前往注册 >></el-button>
+            </el-form-item>
           </el-form>
         </div>
       </div>
@@ -43,16 +46,16 @@ export default {
     ValidCode,
   },
   data() {
-    return{
+    return {
       vedioCanPlay: false,
       fixStyle: '',
       form: {},
       rules: {
         username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' }
+          {required: true, message: '请输入用户名', trigger: 'blur'}
         ],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' }
+          {required: true, message: '请输入密码', trigger: 'blur'}
         ]
       },
       // 加背景图片
@@ -110,25 +113,27 @@ export default {
             this.$message.error("请填写验证码")
             return
           }
-          if(this.form.validCode.toLowerCase() !== this.validCode.toLowerCase()) {
+          if (this.form.validCode.toLowerCase() !== this.validCode.toLowerCase()) {
             this.$message.error("验证码错误")
             return
           }
-         }
-
-     })
-      request.post("/api/login/login",this.form).then(res => {
-        if (code === 0) {
-          this.$message({
-            type: "success",
-            message: "登录成功"
+          request.post("/api/login/login", this.form).then(res => {
+            console.log(res);
+            if (res.code === 0) {
+              this.$message.error(res.msg)
+              return
+            }
+            this.$message({
+              type: "success",
+              message: "登录成功"
+            })
+            sessionStorage.setItem('token', res.token)
+            this.$router.push("/")
           })
-          this.$router.push("/test")
-        }
-        else {
-          this.$message.error("失败")
         }
       })
+
+
     }
   }
 }
@@ -143,7 +148,7 @@ export default {
   overflow: hidden;
 }
 
-.video-container .poster img{
+.video-container .poster img {
   z-index: 0;
   position: absolute;
 }
