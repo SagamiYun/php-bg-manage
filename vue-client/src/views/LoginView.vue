@@ -39,6 +39,7 @@
 
 import ValidCode from "@/components/ValidCode";
 import request from "@/untils/request.js";
+import {activeRouter} from "@/untils/permission.js";
 
 export default {
   name: "LoginView",
@@ -117,6 +118,11 @@ export default {
             this.$message.error("验证码错误")
             return
           }
+          request.get("/api/permission/permission").then(res => {
+            sessionStorage.setItem('permissions', JSON.stringify(res.permission))
+            console.log(res)
+
+          })
           request.post("/api/login/login", this.form).then(res => {
             console.log(res);
             if (res.code === 0) {
@@ -128,8 +134,11 @@ export default {
               message: "登录成功"
             })
             sessionStorage.setItem('token', res.token)
+            // 登录成功的时候更新当前路由
+            activeRouter()
             this.$router.push("/")
           })
+
         }
       })
 

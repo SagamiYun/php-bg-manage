@@ -4,9 +4,11 @@ import Layout from "@/layout/Layout";
 // 注意：这个文件是设置动态路由的
 // permissions是一个资源的数组
 export function activeRouter() {
-    const userStr = sessionStorage.getItem("user")
-    if (userStr) {
-        const user = JSON.parse(userStr)
+
+    const permissionStr = sessionStorage.getItem('permissions')
+    if (permissionStr) {
+        const permissionData = JSON.parse(permissionStr);
+        console.log(permissionData)
         let root = {
             path: '/',
             name: 'Layout',
@@ -14,7 +16,7 @@ export function activeRouter() {
             redirect: "/home",
             children: []
         }
-        user.permissions.forEach(p => {
+        permissionData.forEach(p => {
             let obj = {
                 path: p.path,
                 name: p.name,
@@ -26,5 +28,4 @@ export function activeRouter() {
             router.addRoute(root)
         }
     }
-
 }
