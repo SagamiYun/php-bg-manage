@@ -14,10 +14,10 @@ class Login extends Cross
         $admin = new AdminModel();
         $info = $admin->where('username', $username)->find();
         if(!$info){
-            return json(['code'=>0,'msg'=>'账号或密码错误']);
+            return error('账号或密码错误');
         }
         if($info['password']!=md5($password)){
-            return json(['code'=>0,'msg'=>'账号或密码错误']);
+            return error('账号或密码错误');
         }
 
 
@@ -36,4 +36,5 @@ class Login extends Cross
 
         return json(['code'=>1,'msg'=>'登陆成功','token'=>$token]);
     }
+
 }

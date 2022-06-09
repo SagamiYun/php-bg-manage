@@ -1,12 +1,12 @@
 <?php
-// +----------------------------------------------------------------------
-// | ThinkPHP [ WE CAN DO IT JUST THINK ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2006-2016 http://thinkphp.cn All rights reserved.
-// +----------------------------------------------------------------------
-// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
-// +----------------------------------------------------------------------
-// | Author: 流年 <liu21st@gmail.com>
-// +----------------------------------------------------------------------
+    function permission () {
+        $permission = new \app\common\model\PermissionModel();
+        return $permission -> select();
+    }
 
-// 应用公共文件
+    function error(String $msg): \think\response\Json
+    {
+        return json(['code'=>0,'msg'=>$msg]);
+    }
+
+
