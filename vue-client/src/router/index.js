@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import LoginView from "@/views/LoginView.vue";
-import Test from "@/views/Test.vue";
 import Layout from "@/layout/Layout.vue";
 import {activeRouter} from "@/untils/permission.js";
+import Register from "@/views/Register.vue";
+import Home from "@/views/Home.vue";
 
 Vue.use(VueRouter)
 
@@ -17,17 +18,19 @@ const routes = [
             {
                 path: 'home',
                 name: 'Home',
-                component: () => import("@/views/Home"),
+                component: Home
             }
         ]
     },
     {
         path: '/login',
+        name: 'login',
         component: LoginView
     },
     {
-        path: '/test',
-        component: Test
+        path: '/register',
+        name: 'Register',
+        component: Register
     }
 ]
 

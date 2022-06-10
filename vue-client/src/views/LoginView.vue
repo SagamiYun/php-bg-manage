@@ -121,7 +121,6 @@ export default {
           request.get("/api/permission/permission").then(res => {
             sessionStorage.setItem('permissions', JSON.stringify(res.permission))
             console.log(res)
-
           })
           request.post("/api/login/login", this.form).then(res => {
             console.log(res);
