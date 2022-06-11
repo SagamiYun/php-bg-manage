@@ -39,7 +39,14 @@ class Login extends Cross
 
         $token = $jwt::encode($payload,$key,'HS256');
 
-        return json(['code'=>1,'msg'=>'登陆成功','token'=>$token]);
+        //获取路由权限
+        $urInfo = db('user_role')->where('user_id', $info['id'])->find();
+        $rpInfo = db('role_permission')->alias('rp')
+            ->where('role_id',$urInfo['role_id'])
+            ->join('permission p', 'rp.permission_id = p.id')
+            ->select();
+
+        return json(['code'=>1,'msg'=>'登陆成功','token'=>$token,'permission'=>$rpInfo]);
     }
 
 }
