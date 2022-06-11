@@ -32,8 +32,8 @@ export default {
     }
   },
   created() {
-    let str = sessionStorage.getItem("user") || "{}"
-    this.user = JSON.parse(str)
+    // let str = sessionStorage.getItem("user") || "{}"
+    // this.user = JSON.parse(str)
     // console.log(sessionStorage.getItem("user"))
   },
   methods: {
