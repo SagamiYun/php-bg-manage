@@ -5,9 +5,16 @@
         :default-active="$route.path"
         router
     >
-      <el-menu-item :index="m.path" v-for="m in itemData " :key="m.id">
-        <i :class="m.icon"></i> {{ m.comment }}
-      </el-menu-item>
+      <!--<el-menu-item :index="m.path" v-for="m in itemData " :key="m.id"-->
+      <!--              v-if="m.name !== 'Person' && m.name !== 'Password' ">-->
+      <!--  <i :class="m.icon"></i> {{ m.comment }}-->
+      <!--</el-menu-item>-->
+
+      <div v-for="m in itemData" :key="m.id">
+        <el-menu-item :index="m.path" v-if="m.name !== 'Person' && m.name !== 'Password' ">
+          <i :class="m.icon"></i> {{ m.comment }}
+        </el-menu-item>
+      </div>
     </el-menu>
   </div>
 </template>
@@ -22,7 +29,7 @@ export default {
     // console.log(this.$route.path)
     // let userStr = sessionStorage.getItem("user") || "{}"
     // this.user = JSON.parse(userStr)
-    let item = sessionStorage.getItem('permissions');
+    let item = sessionStorage.getItem('permission');
     this.itemData = JSON.parse(item);
 
     // let token = sessionStorage.getItem('token');

@@ -5,10 +5,9 @@ import Layout from "@/layout/Layout";
 // permissions是一个资源的数组
 export function activeRouter() {
 
-    const permissionStr = sessionStorage.getItem('permissions')
+    const permissionStr = sessionStorage.getItem('permission')
     if (permissionStr) {
         const permissionData = JSON.parse(permissionStr);
-        console.log(permissionData)
         let root = {
             path: '/',
             name: 'Layout',
