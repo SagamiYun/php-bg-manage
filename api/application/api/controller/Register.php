@@ -15,14 +15,13 @@ class Register extends Cross
             return error('请求错误');
         }
 
-
         $admin = new AdminModel();
         $info = $admin->where('username', $username)->find();
         if($info){
             return error('用户名已存在');
         }
 
-        $insert = Db::table('admin')->insert([
+        $insertId = Db::table('admin')->insertGetId([
             'username' => $username,
             'password' => md5($password),
             'status' => 0,
@@ -30,11 +29,15 @@ class Register extends Cross
             'create_time'=>time()
         ]);
 
+        $insert = Db::table('user_role')->insert([
+            'user_id' => $insertId,
+            'role_id' => 2
+        ]);
+
         if($insert!=1){
             return error('注册失败');
         }
 
         return success('注册成功');
-
     }
 }

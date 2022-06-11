@@ -4,6 +4,7 @@ namespace app\api\controller;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use think\facade\Env;
 
 class Base extends Cross
 {
@@ -18,8 +19,7 @@ class Base extends Cross
            return error('token不存在',1);
         }
         $jwt = new JWT();
-        $key = new Key('api123456','HS256');
-        $info = $jwt::decode($header['token'], $key);
+        $info = $jwt::decode($header['token'], new Key(Env::get('token_key'),'HS256'));
         $this->aid = $info->aid;
     }
 }

@@ -9,19 +9,21 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
+use think\facade\Env;
+
 return [
     // 数据库类型
-    'type'            => 'mysql',
+    'type'            => Env::get('database_type'),
     // 服务器地址
-    'hostname'        => '127.0.0.1',
+    'hostname'        => Env::get('database_host'),
     // 数据库名
-    'database'        => 'www_bgmanag_io',
+    'database'        => Env::get('database_name'),
     // 用户名
-    'username'        => 'www_bgmanag_io',
+    'username'        => Env::get('database_username'),
     // 密码
-    'password'        => 'pnGisjtn4KyfESSS',
+    'password'        => Env::get('database_password'),
     // 端口
-    'hostport'        => '3306',
+    'hostport'        => Env::get('database_port'),
     // 连接dsn
     'dsn'             => '',
     // 数据库连接参数

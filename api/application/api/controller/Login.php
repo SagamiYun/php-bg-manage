@@ -3,6 +3,7 @@
 namespace app\api\controller;
 
 use app\common\model\AdminModel;
+use think\facade\Env;
 use think\Request;
 use Firebase\JWT\JWT;
 
@@ -23,14 +24,18 @@ class Login extends Cross
 
         //JWT鉴权
         $jwt = new JWT();
-        $key = 'api123456';
+        $key = Env::get('token_key');
         $payload = [
-            'iss' => 'http://www.bgmanag.io',
-            'aud' => 'http://www.bgmanag.io',
+            'iss' => Env::get('local_url'),
+            'aud' => Env::get('local_url'),
             'iat' => time(),
             'nbf' => time(),
             'aid' => $info['id']
         ];
+
+        db('admin')->where('id',$info['id'])->update([
+            'status' => 1
+        ]);
 
         $token = $jwt::encode($payload,$key,'HS256');
 
