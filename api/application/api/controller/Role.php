@@ -84,11 +84,19 @@ class Role extends Base
             'role_id' => $roleId
         ]);
 
-        if($updateInfo!=0){
-            return json(['code'=>1,'msg'=>'更改权限成功,跳转到首页重新登录']);
-        }else {
-            return error('您的权限没有更改');
+        if($this->aid==$id){
+            if($updateInfo!=0){
+                return json(['code'=>2,'msg'=>'更改权限成功,跳转到首页重新登录']);
+            }else {
+                return error('您的权限没有更改');
+            }
         }
+
+        if($updateInfo==0){
+            return error('该用户权限暂未修改');
+        }
+
+        return success('更新成功');
     }
 
     /**

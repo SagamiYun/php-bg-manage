@@ -5,81 +5,26 @@ namespace app\api\controller;
 use think\Controller;
 use think\Request;
 
-class Logout extends Controller
+class Logout extends Base
 {
     /**
-     * 显示资源列表
+     * 登出方法
      *
      * @return \think\Response
      */
     public function index()
     {
-        //
+        $aid = $this->aid;
+        $update = db('admin')->where('id', $aid)->update([
+            'status' => 0
+        ]);
+
+        if($update==0){
+            return error('登出失败');
+        }
+
+        return success('登出成功');
+
     }
 
-    /**
-     * 显示创建资源表单页.
-     *
-     * @return \think\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * 保存新建的资源
-     *
-     * @param  \think\Request  $request
-     * @return \think\Response
-     */
-    public function save(Request $request)
-    {
-        //
-    }
-
-    /**
-     * 显示指定的资源
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function read($id)
-    {
-        //
-    }
-
-    /**
-     * 显示编辑资源表单页.
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * 保存更新的资源
-     *
-     * @param  \think\Request  $request
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * 删除指定资源
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function delete($id)
-    {
-        //
-    }
 }

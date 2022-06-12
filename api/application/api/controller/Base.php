@@ -16,10 +16,16 @@ class Base extends Cross
         //获取Token，判断Token
         $header = request()->header();
         if(!isset($header['token']) || empty($header['token'])){
-           return error('token不存在',1);
+           return error('请求错误',1);
         }
+
         $jwt = new JWT();
         $info = $jwt::decode($header['token'], new Key(Env::get('token_key'),'HS256'));
         $this->aid = $info->aid;
+        $adminInfo = db('admin')->where('id', $this->aid)->find();
+        if($adminInfo['status']==0){
+            return json(['code'=>250,'msg'=>'请先登录']);
+        }
+
     }
 }

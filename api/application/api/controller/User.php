@@ -22,7 +22,7 @@ class User extends Base
         $ps = (integer)$pageSize;
 
         $userlist = Db::table('admin')->alias('a')
-            ->where('nick_name','like',"%".$search."%")
+            ->where('username','like',"%".$search."%")
             ->join('user_role ur', 'a.id = ur.user_id')
             ->join('role r', 'ur.role_id = r.id')
             ->limit($ps)
@@ -59,6 +59,17 @@ class User extends Base
         $age = $request->param('age');
         $sex = $request->param('sex');
         $address = $request->param('address');
+
+        if(!isset($username) || empty($username)){
+            return error('请至少指定一个用户名');
+        }
+
+        //先用max方法获取当前最大的id，然后加1，保存为变量
+        $max_id = DB::name('admin') ->max('id');
+        //id+1
+        $max_id++;
+        //重置自动增加为当前最大值加1
+        DB::execute("alter table admin auto_increment=".$max_id);
 
         $insertId = db('admin')->insertGetId([
             'username' => $username,
