@@ -2,6 +2,7 @@
 
 namespace app\api\controller;
 
+use app\common\model\AdminModel;
 use think\Db;
 use think\Request;
 
@@ -62,6 +63,12 @@ class User extends Base
 
         if(!isset($username) || empty($username)){
             return error('请至少指定一个用户名');
+        }
+
+        $admin = new AdminModel();
+        $info = $admin->where('username', $username)->find();
+        if($info){
+            return error('请指定唯一用户名');
         }
 
         //先用max方法获取当前最大的id，然后加1，保存为变量

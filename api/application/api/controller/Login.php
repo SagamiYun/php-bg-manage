@@ -46,7 +46,10 @@ class Login extends Cross
             ->join('permission p', 'rp.permission_id = p.id')
             ->select();
 
-        return json(['code'=>1,'msg'=>'登陆成功','token'=>$token,'permission'=>$rpInfo]);
+
+        return json(['code'=>1,'msg'=>'登陆成功','token'=>$token,'permission'=>$rpInfo,'user'=>['username'=>$info['username'],
+            'nick_name'=>$info['nick_name'],'age'=>$info['age'],'sex'=>$info['sex'],
+            'address'=>$info['address'],'avatar'=>$info['avatar']]]);
     }
 
 }
