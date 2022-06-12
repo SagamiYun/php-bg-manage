@@ -68,7 +68,7 @@ class Admin extends Base
     public function updateInfo()
     {
         $adminInfo = db('admin')->where('id', $this->aid)->find();
-        return json(['code'=>1,'msg'=>'登陆成功','user'=>['username'=>$adminInfo['username'],
+        return json(['code'=>1,'msg'=>'登陆成功','user'=>['id'=>$this->aid,'username'=>$adminInfo['username'],
             'nick_name'=>$adminInfo['nick_name'],'age'=>$adminInfo['age'],'sex'=>$adminInfo['sex'],
             'address'=>$adminInfo['address'],'avatar'=>$adminInfo['avatar']]]);
     }

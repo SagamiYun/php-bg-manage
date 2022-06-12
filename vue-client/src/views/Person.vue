@@ -60,7 +60,6 @@ export default {
         sessionStorage.setItem('user', JSON.stringify(res.user))
         let str = sessionStorage.getItem("user") || "{}"
         this.form = JSON.parse(str)
-        this.$emit("userInfo")
       })
     },
 

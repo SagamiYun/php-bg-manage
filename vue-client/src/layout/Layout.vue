@@ -14,7 +14,6 @@
 </template>
 
 
-
 <script>
 import Header from "@/components/Header";
 import Aside from "@/components/Aside";
@@ -36,16 +35,11 @@ export default {
   },
   methods: {
     refreshUser() {
-      // let userJson = sessionStorage.getItem("user");
-      let token = sessionStorage.getItem('token');
-      // if (!token) {
-      //   return
-      // }
-      // let userId = JSON.parse(userJson).id
-      // 从后台取出更新后的最新用户信息
-      // request.get("/user/" + userId).then(res => {
-      //   this.user = res.data
-      // })
+      let userJson = sessionStorage.getItem("user");
+      if (!userJson) {
+        return
+      }
+      let userId = JSON.parse(userJson).id
     }
   }
 }

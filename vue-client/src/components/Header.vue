@@ -13,8 +13,8 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click.native="$router.push('/person')">个人信息</el-dropdown-item>
-            <el-dropdown-item @click.native="logout">登出</el-dropdown-item>
             <el-dropdown-item @click.native="$router.push('/password')">修改密码</el-dropdown-item>
+            <el-dropdown-item @click.native="logout">登出</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>

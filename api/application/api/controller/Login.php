@@ -48,7 +48,7 @@ class Login extends Cross
             ->select();
 
 
-        return json(['code'=>1,'msg'=>'登陆成功','token'=>$token,'permission'=>$rpInfo,'user'=>['username'=>$info['username'],
+        return json(['code'=>1,'msg'=>'登陆成功','token'=>$token,'permission'=>$rpInfo,'user'=>['id'=>$info['id'],'username'=>$info['username'],
             'nick_name'=>$info['nick_name'],'age'=>$info['age'],'sex'=>$info['sex'],
             'address'=>$info['address'],'avatar'=>$info['avatar']]]);
     }
