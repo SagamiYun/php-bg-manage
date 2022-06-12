@@ -84,6 +84,10 @@ class Role extends Base
             'role_id' => $roleId
         ]);
 
+        db('admin')->where('id',$this->aid)->update([
+            'update_time'=>time()
+        ]);
+
         if($this->aid==$id){
             if($updateInfo!=0){
                 return json(['code'=>2,'msg'=>'更改权限成功,跳转到首页重新登录']);

@@ -1,6 +1,6 @@
 ## 环境
 
-- php   7.3
+- php   7.4
 - composer	2.3.6
 - ThinkPHP   5.1
 - 部署环境	Linux：Centos7

@@ -34,7 +34,8 @@ class Login extends Cross
         ];
 
         db('admin')->where('id',$info['id'])->update([
-            'status' => 1
+            'status' => 1,
+            'update_time'=>time()
         ]);
 
         $token = $jwt::encode($payload,$key,'HS256');

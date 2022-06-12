@@ -14,9 +14,9 @@ class Logout extends Base
      */
     public function index()
     {
-        $aid = $this->aid;
-        $update = db('admin')->where('id', $aid)->update([
-            'status' => 0
+        $update = db('admin')->where('id', $this->aid)->update([
+            'status' => 0,
+            'update_time'=>time()
         ]);
 
         if($update==0){

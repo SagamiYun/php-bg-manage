@@ -146,6 +146,7 @@ class User extends Base
             'age' => $age,
             'sex' => $sex,
             'address' => $address,
+            'update_time'=>time()
         ]);
 
         return  success('更新成功');
