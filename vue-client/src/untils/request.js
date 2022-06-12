@@ -43,11 +43,14 @@ request.interceptors.response.use(
         if (typeof res === 'string') {
             res = res ? JSON.parse(res) : res
         }
-        // 验证token
-        // if (res.code === '401') {
-        //     console.error("token过期，重新登录")
-        //     router.push("/login")
-        // }
+        // 验证登录状态
+        if (res.code === 250) {
+            this.$message({
+                type: "error",
+                message: res.msg
+            })
+            router.push("/login")
+        }
         return res;
     },
     error => {

@@ -7,7 +7,7 @@
 
     <!--搜索-->
     <div style="margin: 10px 0">
-      <el-input v-model="search" placeholder="请输入关键字" style="width: 25%" clearable></el-input>
+      <el-input v-model="search" placeholder="请输入用户名关键字" style="width: 25%" clearable></el-input>
       <el-button type="primary" style="margin-left: 7px" @click="load">查询</el-button>
     </div>
 
@@ -83,7 +83,7 @@
     <!--  </el-table>-->
     <!--</el-dialog>-->
 
-    <el-dialog title="提示" :visible.sync="roleChangble" width="30%">
+    <el-dialog title="修改用户权限" :visible.sync="roleChangble" width="30%">
       <el-form>
         <el-form-item :moodel="form" label="权限">
           <el-radio v-model="form.comment" label="管理员">管理员</el-radio>
@@ -97,7 +97,7 @@
     </el-dialog>
 
 
-    <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+    <el-dialog title="修改用户信息" :visible.sync="dialogVisible" width="30%">
       <el-form label-width="80px">
         <el-form-item :moodel="form" label="用户名">
           <el-input v-model="form.username" style="width: 83%"></el-input>
@@ -215,13 +215,29 @@ export default {
     },
     changRole() {
       request.post("/api/role/update", this.form).then(res => {
-        if (res.code === 1) {
+        if (res.code === 2) {
           this.$message({
             type: "success",
             message: res.msg
           })
-          sessionStorage.clear()
-          this.$router.push("/login")
+          request.get("/api/logout/index").then(res => {
+            if (res.code === 1) {
+              sessionStorage.clear()
+              this.$router.push("/login")
+            } else {
+              this.$message({
+                type: "error",
+                message: res.msg
+              })
+            }
+          })
+        } else if (res.code === 1) {
+          this.$message({
+            type: "success",
+            message: res.msg
+          })
+          this.roleChangble = false
+          this.load();
         } else {
           this.$message({
             type: "error",

@@ -24,6 +24,8 @@
 
 <script>
 
+import request from "@/untils/request.js";
+
 export default {
   name: "Header",
   data() {
@@ -38,8 +40,21 @@ export default {
   },
   methods: {
     logout() {
-      sessionStorage.clear()
-      this.$router.push("/login")
+      request.get("/api/logout/index").then(res => {
+        if (res.code === 1) {
+          this.$message({
+            type: "success",
+            message: res.msg
+          })
+          sessionStorage.clear()
+          this.$router.push("/login")
+        } else {
+          this.$message({
+            type: "error",
+            message: res.msg
+          })
+        }
+      })
     }
   }
 }
