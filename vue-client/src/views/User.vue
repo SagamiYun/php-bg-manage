@@ -196,6 +196,8 @@ export default {
               type: "success",
               message: "新增成功"
             })
+            this.load()   //刷新表格的数据
+            this.dialogVisible = false    //关闭弹窗
           } else {
             this.$message({
               type: "error",
@@ -203,8 +205,6 @@ export default {
             })
           }
         })
-        this.load()   //刷新表格的数据
-        this.dialogVisible = false    //关闭弹窗
       }
       this.load()
     },

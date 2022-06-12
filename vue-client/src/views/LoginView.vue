@@ -119,7 +119,6 @@ export default {
             return
           }
           request.post("/api/login/login", this.form).then(res => {
-            console.log(res);
             if (res.code === 0) {
               this.$message.error(res.msg)
               return
@@ -129,6 +128,7 @@ export default {
               message: "登录成功"
             })
             sessionStorage.setItem('token', res.token)
+            sessionStorage.setItem('user', JSON.stringify(res.user))
             sessionStorage.setItem('permission', JSON.stringify(res.permission))
             // 登录成功的时候更新当前路由
             activeRouter()

@@ -7,14 +7,14 @@
         <span class="el-dropdown-link">
             <!--<el-avatar :size="30" :src="user.avatar" style="position: relative; top: 10px"></el-avatar>-->
            <el-avatar :size="30" :src="user.avatar" style="position: relative; top: 10px"></el-avatar>
-          <!--{{user.nick_name}}-->
+          {{ user.nick_name }}
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <!--<el-dropdown-item @click.native="$router.push('/person')">个人信息</el-dropdown-item>-->
+            <el-dropdown-item @click.native="$router.push('/person')">个人信息</el-dropdown-item>
             <el-dropdown-item @click.native="logout">登出</el-dropdown-item>
-            <!--<el-dropdown-item @click.native="$router.push('/password')">修改密码</el-dropdown-item>-->
+            <el-dropdown-item @click.native="$router.push('/password')">修改密码</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -34,9 +34,8 @@ export default {
     }
   },
   created() {
-    // let str = sessionStorage.getItem("user") || "{}"
-    // this.user = JSON.parse(str)
-    // console.log(sessionStorage.getItem("user"))
+    let str = sessionStorage.getItem("user") || "{}"
+    this.user = JSON.parse(str)
   },
   methods: {
     logout() {
