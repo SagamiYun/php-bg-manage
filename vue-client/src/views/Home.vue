@@ -1,14 +1,69 @@
 <template>
-  <h1>Home</h1>
+  <div style="padding: 10px">
+    <el-card>
+      <div id="myChart" :style="{width: '800px', height: '600px'}"></div>
+    </el-card>
+  </div>
 </template>
 
 <script>
 
+import request from "@/untils/request.js";
+
 export default {
   name: "Home",
-  created() {
+  data() {
+    return {}
   },
-  methods: {}
+  mounted() {
+    this.drawLine();
+  },
+  methods: {
+    drawLine() {
+      // 基于准备好的dom，初始化echarts实例
+      let myChart = this.$echarts.init(document.getElementById('myChart'))
+      let option = {
+        title: {
+          text: '各地区用户比例统计图',
+          subtext: '虚拟数据',
+          left: 'left'
+        },
+        legend: {
+          trigger: 'item'
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            mark: {show: true},
+            dataView: {show: true, readOnly: false},
+            restore: {show: true},
+            saveAsImage: {show: true}
+          }
+        },
+        series: [
+          {
+            name: '用户比例',
+            type: 'pie',
+            radius: [50, 250],
+            center: ['50%', '50%'],
+            roseType: 'area',
+            itemStyle: {
+              borderRadius: 8
+            },
+            data: []
+          }
+        ]
+      }
+      request.get("/api/user/count").then(res => {
+        res.data.forEach(item => {
+          option.series[0].data.push({name: item.address, value: item.count})
+        })
+        // 绘制图表
+        myChart.setOption(option);
+      })
+
+    }
+  }
 }
 </script>
 

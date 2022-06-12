@@ -41,9 +41,10 @@ class User extends Base
      *
      * @return \think\Response
      */
-    public function create()
+    public function count()
     {
-        //
+        $count = DB::query("select count(id) count, address from admin GROUP BY address");
+        return json(['data'=>$count]);
     }
 
     /**

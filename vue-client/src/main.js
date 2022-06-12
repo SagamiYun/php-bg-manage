@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 
 import ElementUI from 'element-ui';
+import * as echarts from 'echarts'
 
 import '@/assets/css/global.css'
 
@@ -21,3 +22,5 @@ new Vue({
     store,
     render: h => h(App)
 }).$mount('#app')
+
+Vue.prototype.$echarts = echarts
