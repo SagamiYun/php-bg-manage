@@ -260,7 +260,7 @@ export default {
             message: '未知异常'
           })
         }
-        this.load()   //刷新表格的数据
+        this.load()
       })
     },
 
