@@ -29,8 +29,7 @@ class User extends Base
             ->limit($ps)
             ->page($pn)
             ->field('a.id,a.username,a.nick_name,a.age,a.sex,a.address,ur.role_id,r.name,r.comment')
-        ->select();
-        $role = 1;
+            ->select();
         $conunt = db('admin')->count('id');
 
         return json(['userlist'=>$userlist,'conunt'=>$conunt]);
