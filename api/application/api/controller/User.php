@@ -71,12 +71,15 @@ class User extends Base
             return error('请指定唯一用户名');
         }
 
-        //先用max方法获取当前最大的id，然后加1，保存为变量
-        $max_id = DB::name('admin') ->max('id');
-        //id+1
-        $max_id++;
         //重置自动增加为当前最大值加1
-        DB::execute("alter table admin auto_increment=".$max_id);
+        $a_max_id = DB::name('admin') ->max('id');
+        $ur_max_id = DB::name('user_role') ->max('user_id');
+
+        $a_max_id++;
+        $ur_max_id++;
+
+        DB::execute("alter table admin auto_increment=".$a_max_id);
+        DB::execute("alter table admin auto_increment=".$ur_max_id);
 
         $insertId = db('admin')->insertGetId([
             'username' => $username,
@@ -103,27 +106,6 @@ class User extends Base
 
     }
 
-    /**
-     * 显示指定的资源
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function read($id)
-    {
-        //
-    }
-
-    /**
-     * 显示编辑资源表单页.
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * 保存更新的资源
@@ -150,7 +132,6 @@ class User extends Base
         ]);
 
         return  success('更新成功');
-
     }
 
     /**
