@@ -91,12 +91,11 @@ class Role extends Base
     /**
      * 显示指定的资源
      *
-     * @param  int  $id
      * @return \think\Response
      */
-    public function read($id)
+    public function getAll()
     {
-        //
+        return json(['rinfo'=>db('role')->select()]);
     }
 
 

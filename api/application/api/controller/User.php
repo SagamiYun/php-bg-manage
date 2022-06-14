@@ -22,7 +22,7 @@ class User extends Base
         $pn = (integer)$pageNum;
         $ps = (integer)$pageSize;
 
-        $userlist = Db::table('admin')->alias('a')
+        $userList = Db::table('admin')->alias('a')
             ->where('username','like',"%".$search."%")
             ->join('user_role ur', 'a.id = ur.user_id')
             ->join('role r', 'ur.role_id = r.id')
@@ -30,9 +30,16 @@ class User extends Base
             ->page($pn)
             ->field('a.id,a.username,a.nick_name,a.age,a.sex,a.address,ur.role_id,r.name,r.comment')
             ->select();
+
+        foreach ($userList as $key=> $v){
+            $roleInfo = db('user_role')->where('user_id', $v['id'])->column('role_id');
+            $v['roles'] = $roleInfo;
+            $userList[$key] = $v;
+        }
+
         $conunt = db('admin')->count('id');
 
-        return json(['userlist'=>$userlist,'conunt'=>$conunt]);
+        return json(['userlist'=>$userList,'conunt'=>$conunt]);
     }
 
     /**
@@ -47,12 +54,12 @@ class User extends Base
     }
 
     /**
-     * 保存新建的资源
+     * 创建新建的资源
      *
      * @param  \think\Request  $request
      * @return \think\Response
      */
-    public function save(Request $request)
+    public function create(Request $request)
     {
         $id = $request->param('id');
         $username = $request->param('username');
@@ -102,6 +109,34 @@ class User extends Base
 
         return success('新增成功');
 
+    }
+
+
+    /**
+     * 保存新建的资源
+     *
+     * @param  \think\Request  $request
+     * @return \think\Response
+     */
+    public function save(Request $request)
+    {
+        $id = $request->param('id');
+        $role_id= $request->param('roles');
+
+        db('user_role')->where('user_id',$id)->delete();
+
+        foreach ($role_id as $key){
+            db('user_role')->insert([
+                'user_id' => $id,
+                'role_id'=> $key
+            ]);
+        }
+
+        if($id==$this->aid){
+            return json(['code'=>1,'boole'=>true]);
+        }
+
+        return json(['code'=>1,'msg'=>'更新成功']);
     }
 
 
