@@ -21,7 +21,6 @@
           </div>
           <div style="color: #888; font-size: 12px">
             <span>{{ item.time }}</span>
-            <el-button type="text" style="margin-left: 20px" @click="reReply(item.id)">回复</el-button>
             <el-button type="text" size="mini" @click="del(item.id)" v-if="item.nick_name === user.nick_name">删除
             </el-button>
           </div>
@@ -64,21 +63,20 @@ export default {
         });
         return;
       }
-      // 如果是评论的话，在 save的时候要注意设置 当前模块的id为 foreignId。也就是  entity.foreignId = 模块id
       request.post("/api/message/save", this.entity).then(res => {
         if (res.code === 1) {
           this.$message({
             message: "评论成功",
             type: "success"
           });
+          this.entity = {}
+          this.loadMessage();
         } else {
           this.$message({
             message: '服务器错误',
             type: "error"
           });
         }
-        this.entity = {}
-        this.loadMessage();
       })
     },
     del(id) {
