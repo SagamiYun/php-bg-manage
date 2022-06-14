@@ -3,13 +3,14 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+import WangEditor from 'wangeditor'
+
 import ElementUI from 'element-ui';
 import * as echarts from 'echarts'
 
 import '@/assets/css/global.css'
 
 Vue.config.productionTip = false
-
 Vue.use(ElementUI
     , {
         // locale,       //国际化组件引入
@@ -20,6 +21,7 @@ Vue.use(ElementUI
 new Vue({
     router,
     store,
+    WangEditor,
     render: h => h(App)
 }).$mount('#app')
 

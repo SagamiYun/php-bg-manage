@@ -7,7 +7,7 @@
 
     <!--    搜索区域-->
     <div style="margin: 10px 0">
-      <el-input v-model="search" placeholder="请输入备注关键字" style="width: 20%" clearable></el-input>
+      <el-input v-model="search" placeholder="请输入标题关键字" style="width: 20%" clearable></el-input>
       <el-button type="primary" style="margin-left: 5px" @click="load">查询</el-button>
     </div>
     <el-table
@@ -20,27 +20,23 @@
           prop="id"
           label="ID"
           sortable
-          width="80"
       >
       </el-table-column>
       <el-table-column
-          prop="name"
-          label="名称">
+          prop="title"
+          label="标题">
       </el-table-column>
       <el-table-column
-          prop="path"
-          label="路径">
+          prop="author"
+          label="作者">
       </el-table-column>
       <el-table-column
-          prop="comment"
-          label="备注">
-      </el-table-column>
-      <el-table-column
-          prop="icon"
-          label="图标">
+          prop="time"
+          label="时间">
       </el-table-column>
       <el-table-column label="操作">
         <template #default="scope">
+          <el-button size="mini" @click="details(scope.row)">详情</el-button>
           <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
           <el-popconfirm title="确定删除吗？" @confirm="handleDelete(scope.row.id)">
             <template #reference>
@@ -63,20 +59,13 @@
       </el-pagination>
     </div>
 
-    <el-dialog title="路径权限修改" :visible.sync="dialogVisible" width="30%">
+    <el-dialog title="编辑文章" :visible.sync="dialogVisible" width="50%">
       <el-form :model="form" label-width="120px">
-        <el-form-item label="名称">
-          <el-input v-model="form.name" style="width: 80%"></el-input>
+        <el-form-item label="标题">
+          <el-input v-model="form.title" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="路径">
-          <el-input v-model="form.path" style="width: 80%"></el-input>
-        </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="form.comment" style="width: 80%"></el-input>
-        </el-form-item>
-        <el-form-item label="图标">
-          <el-input v-model="form.icon" style="width: 80%"></el-input>
-        </el-form-item>
+        <el-form-item label="文本内容" prop="content" class="content"></el-form-item>
+        <wangEditor v-bind:content="form.content" @listenToContent="getContent"/>
       </el-form>
       <template #footer>
           <span class="dialog-footer">
@@ -86,19 +75,36 @@
       </template>
     </el-dialog>
 
+    <el-dialog title="详情" :visible.sync="vis" width="50%">
+      <span>标题</span>
+      <el-card>
+        <div v-html="detail.title" style="min-height: 20px"></div>
+      </el-card>
+      <el-divider></el-divider>
+      <span>内容</span>
+      <el-card>
+        <div v-html="detail.content" style="min-height: 100px"></div>
+      </el-card>
+    </el-dialog>
+
   </div>
 </template>
 
+<style>body {
+  margin: 0;
+}</style>
+
 <script>
 
-import request from "@/untils/request";
+import request from "../untils/request";
+import row from "element-ui/packages/row";
+import wangEditor from '../components/wangEditor.vue'
 
 export default {
-  name: 'Permission',
-  components: {},
+  name: 'News',
+  components: {wangEditor},
   data() {
     return {
-      loading: true,
       form: {},
       dialogVisible: false,
       search: '',
@@ -106,15 +112,24 @@ export default {
       pageSize: 10,
       total: 0,
       tableData: [],
+      vis: false,
+      detail: {},
+      loading: true,
+      contentCache: ''
     }
   },
   created() {
     this.load()
   },
+  mounted() {       //所有元素加载完成之后最后加载该方法内的模块
+  },
   methods: {
+    details(row) {
+      this.detail = row;
+      this.vis = true;
+    },
     load() {
-      this.loading = true
-      request.get("/api/permission/index", {
+      request.get("/api/news/index", {
         params: {
           pageNum: this.currentPage,
           pageSize: this.pageSize,
@@ -123,16 +138,20 @@ export default {
       }).then(res => {
         this.tableData = res.records
         this.total = res.conunt
-        this.loading = false
       })
+      this.loading = false
     },
     add() {
-      this.dialogVisible = true
       this.form = {}
+      this.dialogVisible = true
+    },
+    getContent(val) {
+      this.contentCache = val;
     },
     save() {
       if (this.form.id) {  // 更新
-        request.put("/api/permission/update", this.form).then(res => {
+        this.form.content = this.contentCache
+        request.put("/api/news/update", this.form).then(res => {
           console.log(res)
           if (res.code === 1) {
             this.$message({
@@ -148,8 +167,10 @@ export default {
             })
           }
         })
-      } else {  // 新增
-        request.post("/api/permission/save", this.form).then(res => {
+      } else {    //新增
+        this.form.content = this.contentCache
+        request.put("/api/news/save", this.form).then(res => {
+          console.log(res)
           if (res.code === 1) {
             this.$message({
               type: "success",
@@ -168,14 +189,15 @@ export default {
     },
     handleEdit(row) {
       this.form = JSON.parse(JSON.stringify(row))
+      // console.log(this.form)
       this.dialogVisible = true
     },
     handleDelete(id) {
-      request.post("/api/permission/delete", id).then(res => {
+      request.post("/api/news/delete", id).then(res => {
         if (res.code === 1) {
           this.$message({
             type: "success",
-            message: res.msg
+            message: "删除成功"
           })
         } else {
           this.$message({
@@ -186,11 +208,11 @@ export default {
         this.load()
       })
     },
-    handleSizeChange(pageSize) {   // 改变当前每页的个数触发
+    handleSizeChange(pageSize) {
       this.pageSize = pageSize
       this.load()
     },
-    handleCurrentChange(pageNum) {  // 改变当前页码触发
+    handleCurrentChange(pageNum) {
       this.currentPage = pageNum
       this.load()
     }
