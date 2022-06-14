@@ -43,6 +43,14 @@ class Admin extends Base
                 'avatar' => 'http://www.bgmanag.io/static/upload/avatar/'.$imgUrl
             ]);
 
+            $adminInfo = db('admin')->where('id', $this->aid)->find();
+            db('img')->insert([
+                'author' => $adminInfo['username'],
+                'img_url' =>  'http://www.bgmanag.io/static/upload/avatar/'.$imgUrl,
+                'src_url' =>  './static/upload/avatar/'.$imgUrl,
+                'update_time' => date('Y-m-d H:i:s',time())
+            ]);
+
             return json(['code'=>1,'msg'=>'上传成功','imgurl'=>'http://www.bgmanag.io/static/upload/avatar/'.$imgUrl]);
         }else{
             return error('上传失败');
