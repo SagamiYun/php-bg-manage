@@ -74,12 +74,10 @@ class User extends Base
         //重置自动增加为当前最大值加1
         $a_max_id = DB::name('admin') ->max('id');
         $ur_max_id = DB::name('user_role') ->max('user_id');
-
         $a_max_id++;
         $ur_max_id++;
-
         DB::execute("alter table admin auto_increment=".$a_max_id);
-        DB::execute("alter table admin auto_increment=".$ur_max_id);
+        DB::execute("alter table user_role auto_increment=".$ur_max_id);
 
         $insertId = db('admin')->insertGetId([
             'username' => $username,

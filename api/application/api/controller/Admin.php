@@ -49,16 +49,6 @@ class Admin extends Base
         }
     }
 
-    /**
-     * 保存新建的资源
-     *
-     * @param  \think\Request  $request
-     * @return \think\Response
-     */
-    public function save(Request $request)
-    {
-        //
-    }
 
     /**
      * 显示指定的资源
@@ -120,16 +110,5 @@ class Admin extends Base
         ]);
 
         return  success('更新成功');
-    }
-
-    /**
-     * 删除指定资源
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function delete($id)
-    {
-        //
     }
 }

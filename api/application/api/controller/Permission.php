@@ -21,12 +21,12 @@ class Permission extends Base
         $pn = (integer)$pageNum;
         $ps = (integer)$pageSize;
 
-        $permissionList = Db::table('permission')->alias('p')
+        $permissionList = Db::table('permission')
             ->where('comment','like',"%".$search."%")
             ->limit($ps)
             ->page($pn)
             ->select();
-        $conunt = db('admin')->count('id');
+        $conunt = db('permission')->count('id');
 
         return json(['records'=>$permissionList,'conunt'=>$conunt]);
     }
