@@ -31,7 +31,7 @@ class Register extends Cross
 
         $insert = Db::table('user_role')->insert([
             'user_id' => $insertId,
-            'role_id' => 2
+            'role_id' => 3
         ]);
 
         if($insert!=1){

@@ -2,8 +2,6 @@
 
 namespace app\api\controller;
 
-use app\common\model\RoleModel;
-use think\Controller;
 use think\Db;
 use think\Request;
 
@@ -14,9 +12,30 @@ class Role extends Base
      *
      * @return \think\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $pageNum = $request->param('pageNum')?$request->param('pageNum'):1;
+        $pageSize = $request->param('pageSize')?$request->param('pageSize'):10;
+        $search = $request->param('search')?$request->param('search'):'';
+
+        $pn = (integer)$pageNum;
+        $ps = (integer)$pageSize;
+
+        $roleInfo = db('role')
+            ->where('comment','like',"%".$search."%")
+            ->limit($ps)
+            ->page($pn)
+            ->select();
+
+        foreach ($roleInfo as $key=> $v){
+            $permissionInfo = db('role_permission')->where('role_id', $v['id'])->column('permission_id');
+            $v['permissions'] = $permissionInfo;
+            $roleInfo[$key] = $v;
+        }
+
+        $conunt = db('role')->count('id');
+
+        return  json(['records'=>$roleInfo,'conunt'=>$conunt]);
     }
 
     /**
@@ -24,9 +43,22 @@ class Role extends Base
      *
      * @return \think\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $name = $request->param('name');
+        $comment = $request->param('comment');
+
+        //重置自动增加为当前最大值加1
+        $role_max_id = db('role') ->max('id');
+        $role_max_id++;
+        DB::execute("alter table role auto_increment=".$role_max_id);
+
+        db('role')->insert([
+            'name' => $name,
+            'comment' => $comment
+        ]);
+
+        return success('新增成功');
     }
 
     /**
@@ -37,7 +69,23 @@ class Role extends Base
      */
     public function save(Request $request)
     {
-        //
+        $id = $request->param('id');
+        $permissions = $request->param('permissions');
+
+        db('role_permission')->where('role_id',$id)->delete();
+
+        foreach ($permissions as $key){
+            db('role_permission')->insert([
+                'role_id' => $id,
+                'permission_id'=> $key
+            ]);
+        }
+
+        if($id==$this->aid){
+            return json(['code'=>1,'boole'=>true]);
+        }
+
+        return json(['code'=>1,'msg'=>'更新成功']);
     }
 
     /**
@@ -51,16 +99,6 @@ class Role extends Base
         //
     }
 
-    /**
-     * 显示编辑资源表单页.
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * 保存更新的资源
@@ -70,35 +108,14 @@ class Role extends Base
      */
     public function update(Request $request)
     {
-        $comment = $request->param('comment');
         $id = $request->param('id');
+        $name = $request->param('name');
+        $comment = $request->param('comment');
 
-        $roleModel = new RoleModel();
-        $role = $roleModel->where('comment',$comment)->find();
-
-        $roleId = $role['id'];
-
-        $updateInfo = db('user_role')
-            ->where('user_id', $id)
-            ->update([
-            'role_id' => $roleId
+        db('role')->where('id',$id)->update([
+            'name' => $name,
+            'comment' => $comment
         ]);
-
-        db('admin')->where('id',$this->aid)->update([
-            'update_time'=>time()
-        ]);
-
-        if($this->aid==$id){
-            if($updateInfo!=0){
-                return json(['code'=>2,'msg'=>'更改权限成功,跳转到首页重新登录']);
-            }else {
-                return error('您的权限没有更改');
-            }
-        }
-
-        if($updateInfo==0){
-            return error('该用户权限暂未修改');
-        }
 
         return success('更新成功');
     }
@@ -111,6 +128,8 @@ class Role extends Base
      */
     public function delete($id)
     {
-        //
+        db('role')->where('id',$id)->delete();
+        db('role_permission')->where('role_id',$id)->delete();
+        return success('删除成功');
     }
 }

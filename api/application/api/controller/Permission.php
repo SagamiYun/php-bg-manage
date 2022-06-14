@@ -33,6 +33,14 @@ class Permission extends Base
 
 
     /**
+     * 获取所有权限列表
+    */
+    public function getAll()
+    {
+        return json(['pinfo'=>db('permission')->select()]);
+    }
+
+    /**
      * 保存新建的资源
      *
      * @param  \think\Request  $request
