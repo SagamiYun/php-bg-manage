@@ -47,9 +47,18 @@
           label="身份">
       </el-table-column>
 
+      <el-table-column label="角色列表" width="300">
+        <template #default="scope">
+          <el-select v-model="scope.row.roles" multiple placeholder="请选择" style="width: 80%">
+            <el-option v-for="item in roles" :key="item.id" :label="item.comment" :value="item.id"></el-option>
+          </el-select>
+        </template>
+      </el-table-column>
+
       <el-table-column label="操作" width="400">
         <template #default="scope">
-          <el-button size="mini" type="primary" @click="handleChange(scope.row)">编辑角色信息</el-button>
+          <el-button size="mini" type="primary" @click="handleChange(scope.row)">保存角色信息</el-button>
+          <!--<el-button size="mini" type="primary" @click="handleChange(scope.row)">编辑角色信息</el-button>-->
           <!--<el-button size="mini" type="success" plain @click="showBooks(scope.row.bookList)">查看图书列表</el-button>-->
           <el-button size="mini" type="primary" plain @click="handleEdit(scope.row)">编辑</el-button>
           <el-popconfirm @confirm="handDelete(scope.row.id)"
@@ -82,19 +91,6 @@
     <!--    <el-table-column prop="price" label="价格"></el-table-column>-->
     <!--  </el-table>-->
     <!--</el-dialog>-->
-
-    <el-dialog title="修改用户权限" :visible.sync="roleChangble" width="30%">
-      <el-form>
-        <el-form-item :moodel="form" label="权限">
-          <el-radio v-model="form.comment" label="管理员">管理员</el-radio>
-          <el-radio v-model="form.comment" label="普通用户">普通用户</el-radio>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-          <el-button @click="roleChangble = false">取 消</el-button>
-        <el-button type="primary" @click="changRole">确 定</el-button>
-        </span>
-    </el-dialog>
 
 
     <el-dialog title="修改用户信息" :visible.sync="dialogVisible" width="30%">
@@ -143,7 +139,6 @@ export default {
   data() {
     return {
       form: {},
-      roleChangble: false,
       dialogVisible: false,
       bookVis: false,
       loading: true,
@@ -153,6 +148,7 @@ export default {
       total: 0,
       tableData: [],
       bookList: [],
+      roles: []
     }
   },
   created() {
@@ -171,6 +167,9 @@ export default {
         this.total = res.conunt
         this.loading = false
       })
+      request.get("/api/role/getAll").then(res => {
+        this.roles = res.rinfo
+      })
     },
     save() {
       if (this.form.id) {    //更新
@@ -180,6 +179,8 @@ export default {
               type: "success",
               message: "更新成功"
             })
+            this.load()
+            this.dialogVisible = false
           } else {
             this.$message({
               type: "error",
@@ -187,17 +188,15 @@ export default {
             })
           }
         })
-        this.load()   //刷新表格的数据
-        this.dialogVisible = false    //关闭弹窗
       } else {   //新增
-        request.post("/api/user/save", this.form).then(res => {
+        request.post("/api/user/create", this.form).then(res => {
           if (res.code === 1) {
             this.$message({
               type: "success",
               message: "新增成功"
             })
-            this.load()   //刷新表格的数据
-            this.dialogVisible = false    //关闭弹窗
+            this.load()
+            this.dialogVisible = false
           } else {
             this.$message({
               type: "error",
@@ -212,39 +211,6 @@ export default {
       this.dialogVisible = true
       this.form = {}
       this.load()
-    },
-    changRole() {
-      request.post("/api/role/update", this.form).then(res => {
-        if (res.code === 2) {
-          this.$message({
-            type: "success",
-            message: res.msg
-          })
-          request.get("/api/logout/index").then(res => {
-            if (res.code === 1) {
-              sessionStorage.clear()
-              this.$router.push("/login")
-            } else {
-              this.$message({
-                type: "error",
-                message: res.msg
-              })
-            }
-          })
-        } else if (res.code === 1) {
-          this.$message({
-            type: "success",
-            message: res.msg
-          })
-          this.roleChangble = false
-          this.load();
-        } else {
-          this.$message({
-            type: "error",
-            message: res.msg
-          })
-        }
-      })
     },
     handDelete(id) {
       console.log(id)
@@ -263,11 +229,26 @@ export default {
         this.load()
       })
     },
-
     handleChange(row) {
-      this.form = JSON.parse(JSON.stringify(row))
-      this.roleChangble = true
-      console.log(this.form.role_id)
+      request.put("/api/user/save", row).then(res => {
+        if (res.code === 1 && !res.boole) {
+          this.$message.success("更新成功")
+        }
+        if (res.code === 1 && res.boole) {
+          request.get("/api/logout/index").then(res => {
+            if (res.code === 1) {
+              sessionStorage.clear()
+              this.$message.success("更新成功，请重新登录")
+              this.$router.push("/login")
+            } else {
+              this.$message({
+                type: "error",
+                message: res.msg
+              })
+            }
+          })
+        }
+      })
     },
     showBooks(books) {
       this.bookVis = true
