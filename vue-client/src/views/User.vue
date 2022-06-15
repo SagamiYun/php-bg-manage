@@ -220,7 +220,7 @@ export default {
         } else {
           this.$message({
             type: "error",
-            message: '未知异常'
+            message: '服务器异常'
           })
         }
         this.load()

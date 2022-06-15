@@ -81,7 +81,7 @@
           :total="total">
       </el-pagination>
 
-      <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+      <el-dialog title="编辑书籍" :visible.sync="dialogVisible" width="30%">
         <el-form :model="form" label-width="120px">
           <el-form-item label="名称">
             <el-input v-model="form.name" style="width: 80%"></el-input>
@@ -167,7 +167,6 @@ export default {
       this.ids = val.map(v => v.id)       // [{id,name}, {id,name}] => [id,id]
     },
     filesUploadSuccess(res) {
-      console.log(res)
       this.form.cover = res.data
     },
     load() {
@@ -208,7 +207,6 @@ export default {
           }
         })
       } else {  // 新增
-        console.log(this.form)
         request.post("/api/book/create", this.form).then(res => {
           if (res.code === 1) {
             this.$message({
