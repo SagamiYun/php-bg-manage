@@ -48,6 +48,7 @@ class Admin extends Base
                 'author' => $adminInfo['username'],
                 'img_url' =>  'http://www.bgmanag.io/static/upload/avatar/'.$imgUrl,
                 'src_url' =>  './static/upload/avatar/'.$imgUrl,
+                'name' => 'avatar'.time(),
                 'update_time' => date('Y-m-d H:i:s',time())
             ]);
 

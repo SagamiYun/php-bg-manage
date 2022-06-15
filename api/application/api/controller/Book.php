@@ -71,7 +71,7 @@ class Book extends Base
         return  success('新增成功');
     }
 
-    
+
     /**
      * 保存更新的资源
      *

@@ -14,7 +14,7 @@ class Img extends Base
      */
     public function index()
     {
-        //
+        return json(['records'=>db('img')->select()]);
     }
 
     /**
@@ -22,43 +22,20 @@ class Img extends Base
      *
      * @return \think\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $name = $request->param('name');
+        $imgUrl = $request->param('img_url');
+        $url = $imgUrl['url'];
+
+        db('img')->where('img_url',$url)->update([
+            'name' => $name
+        ]);
+
+        return success('新增成功');
     }
 
-    /**
-     * 保存新建的资源
-     *
-     * @param Request $request
-     * @return \think\Response
-     */
-    public function save(Request $request)
-    {
-        //
-    }
 
-    /**
-     * 显示指定的资源
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function read($id)
-    {
-        //
-    }
-
-    /**
-     * 显示编辑资源表单页.
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * 保存更新的资源
@@ -89,6 +66,7 @@ class Img extends Base
                 'author' => $adminInfo['username'],
                 'img_url' =>  'http://www.bgmanag.io/static/upload/editor/'.$imgUrl,
                 'src_url' =>  './static/upload/editor/'.$imgUrl,
+                'name' => 'editor'.time(),
                 'update_time' => date('Y-m-d H:i:s',time())
             ]);
 
@@ -106,6 +84,9 @@ class Img extends Base
      */
     public function delete($id)
     {
-        //
+        $imgInfo = db('img')->where('id', $id)->find();
+        db('img')->where('id', $id)->delete();
+        unlink($imgInfo['src_url']);
+        return success('删除成功');
     }
 }
