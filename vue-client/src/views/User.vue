@@ -58,7 +58,7 @@
       <el-table-column label="操作" width="400">
         <template #default="scope">
           <el-button size="mini" type="primary" @click="handleChange(scope.row)">保存角色信息</el-button>
-          <!--<el-button size="mini" type="success" plain @click="showBooks(scope.row.bookList)">查看图书列表</el-button>-->
+          <el-button size="mini" type="success" plain @click="showBooks(scope.row.bookList)">查看图书列表</el-button>
           <el-button size="mini" type="primary" plain @click="handleEdit(scope.row)">编辑</el-button>
           <el-popconfirm @confirm="handDelete(scope.row.id)"
                          title="确定删除？">
@@ -82,13 +82,13 @@
       </el-pagination>
     </div>
 
-    <!--<el-dialog title="用户拥有的图书列表" :visible.sync="bookVis" width="30%">-->
-    <!--  <el-table :data="bookList" stripe border>-->
-    <!--    <el-table-column prop="id" label="ID"></el-table-column>-->
-    <!--    <el-table-column prop="name" label="名称"></el-table-column>-->
-    <!--    <el-table-column prop="price" label="价格"></el-table-column>-->
-    <!--  </el-table>-->
-    <!--</el-dialog>-->
+    <el-dialog title="用户拥有的图书列表" :visible.sync="bookVis" width="30%">
+      <el-table :data="bookList" stripe border>
+        <el-table-column prop="id" label="ID"></el-table-column>
+        <el-table-column prop="name" label="名称"></el-table-column>
+        <el-table-column prop="author" label="作者"></el-table-column>
+      </el-table>
+    </el-dialog>
 
     <el-dialog title="修改用户信息" :visible.sync="dialogVisible" width="30%">
       <el-form label-width="80px">

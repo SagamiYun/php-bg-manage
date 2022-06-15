@@ -37,6 +37,12 @@ class User extends Base
             $userList[$key] = $v;
         }
 
+        foreach ($userList as $key=> $v){
+            $bookInfo = db('book')->where('user_id', $v['id'])->select();
+            $v['bookList'] = $bookInfo;
+            $userList[$key] = $v;
+        }
+
         $conunt = db('admin')->count('id');
 
         return json(['userlist'=>$userList,'conunt'=>$conunt]);
