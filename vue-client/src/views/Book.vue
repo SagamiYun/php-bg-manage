@@ -167,7 +167,9 @@ export default {
       this.ids = val.map(v => v.id)       // [{id,name}, {id,name}] => [id,id]
     },
     filesUploadSuccess(res) {
-      this.form.cover = res.data
+      if (res.data.url) {
+        this.form.cover = res.data.url
+      }
     },
     load() {
       request.get("/api/book/index", {
