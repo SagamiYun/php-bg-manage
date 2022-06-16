@@ -51,9 +51,6 @@ class Book extends Base
             return error('请指定一个作者');
         }
 
-        if(!$cover){
-            $cover['url'] = 0;
-        }
 
         //重置自动增加为当前最大值加1
         $img_max_id = DB::name('book') ->max('id');
@@ -64,7 +61,7 @@ class Book extends Base
             'name' => $name,
             'author' => $author,
             'create_time'=> $createTime,
-            'cover' => $cover['url'],
+            'cover' => $cover,
             'user_id' => $this->aid
         ]);
 
@@ -87,12 +84,11 @@ class Book extends Base
         $createTime = $request->param('create_time');
         $cover = $request->param('cover');
 
-
         db('book')->where('id',$id)->update([
             'name' => $name,
             'author' => $author,
             'create_time' => $createTime,
-            'cover' => $cover['url'],
+            'cover' => $cover,
             'user_id' => $this->aid
         ]);
 
